@@ -11,13 +11,6 @@
 using namespace std;
 
 Game::Game() : player("Luigi"), currentRoomIndex(0)  {
-//    auto ghost1 = std::make_shared<Ghost>("Purple Puncher", 30);
-//    auto ghost2 = std::make_shared<Ghost>("Sneaky Spook", 40);
-//
-//    Room entrance("Entrance", nullptr, false);
-//    Room library("Library", ghost1, true);
-//    Room ballroom("Ballroom", ghost2, false);
-
     mansion.emplace_back("Entrance", nullptr, false);
     mansion.emplace_back("Library", new Ghost("Purple Puncher", 30), true);
     mansion.emplace_back("Ballroom", new Ghost("Sneaky Spook", 40), false);
