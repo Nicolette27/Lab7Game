@@ -23,6 +23,7 @@ public:
     void fightGhost();
     void searchRoom();
     void chooseRoom();
+    bool allGhostsDefeated() const;
 };
 
 #endif // GAME_H

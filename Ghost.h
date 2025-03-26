@@ -14,6 +14,7 @@ private:
 
 public:
     Ghost(std::string name, int health);
+    ~Ghost();
     std::string getName() const;
     int getHealth() const;
     void takeDamage(int damage);

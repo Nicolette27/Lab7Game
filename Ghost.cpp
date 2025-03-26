@@ -8,6 +8,7 @@
 Ghost::Ghost(std::string name, int health)
     : name(name), health(health) {}
 
+
 std::string Ghost::getName() const {
     return name;
 }
@@ -15,6 +16,8 @@ std::string Ghost::getName() const {
 int Ghost::getHealth() const {
     return health;
 }
+
+Ghost::~Ghost() {}
 
 void Ghost::takeDamage(int damage) {
     health -= damage;

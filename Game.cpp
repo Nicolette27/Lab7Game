@@ -6,20 +6,21 @@
 #include "Player.h"
 #include "Ghost.h"
 #include <iostream>
+#include <memory>
 
 using namespace std;
 
 Game::Game() : player("Luigi"), currentRoomIndex(0)  {
-    Ghost ghost1("Purple Puncher", 30);
-    Ghost ghost2("Sneaky Spook", 40);
+//    auto ghost1 = std::make_shared<Ghost>("Purple Puncher", 30);
+//    auto ghost2 = std::make_shared<Ghost>("Sneaky Spook", 40);
+//
+//    Room entrance("Entrance", nullptr, false);
+//    Room library("Library", ghost1, true);
+//    Room ballroom("Ballroom", ghost2, false);
 
-    Room entrance("Entrance", nullptr, false);  // No ghost, no key
-    Room library("Library", &ghost1, true);     // Ghost in Library, has a key
-    Room ballroom("Ballroom", &ghost2, false);  // Ghost in Ballroom, no key
-
-    mansion.push_back(entrance);
-    mansion.push_back(library);
-    mansion.push_back(ballroom);
+    mansion.emplace_back("Entrance", nullptr, false);
+    mansion.emplace_back("Library", new Ghost("Purple Puncher", 30), true);
+    mansion.emplace_back("Ballroom", new Ghost("Sneaky Spook", 40), false);
 }
 
 void Game::play() {
@@ -33,6 +34,10 @@ void Game::play() {
 void Game::playTurn() {
     std::cout << "\nYou are in the " << mansion[currentRoomIndex].getName() << ".\n";
 
+    if (allGhostsDefeated()) {
+       std::cout << "Congratulations! You have defeated all the ghosts!\n";
+       exit(0);
+    }
     while (true) {
         std::cout << "What would you like to do?\n";
         std::cout << "[1] Fight Ghost\n[2] Explore Room\n[3] Move to Another Room\nChoice: ";
@@ -53,21 +58,25 @@ void Game::playTurn() {
 }
 
 void Game::fightGhost() {
-    Ghost& ghost = *mansion[currentRoomIndex].getGhost();
+  Ghost& ghost = *mansion[currentRoomIndex].getGhost();
 
-    while (ghost.getHealth() > 0 && player.getHealth() > 0) {
-        player.attackGhost(ghost);
-        if (ghost.getHealth() > 0) {
-            player.takeDamage(10);
-        }
-    }
+  if (!ghost.getHealth()) {
+    std::cout << "There's no ghost here!\n";
+    return;
+  }
+  while (ghost.getHealth() > 0 && player.getHealth() > 0) {
+      player.attackGhost(ghost);
+      if (ghost.getHealth() > 0) {
+          player.takeDamage(10);
+      }
+  }
 
-    if (player.getHealth() == 0) {
-        std::cout << "Luigi has fainted!\n";
-    } else {
-        std::cout << "You defeated the ghost!\n";
-        mansion[currentRoomIndex].removeGhost();
-    }
+  if (player.getHealth() == 0) {
+      std::cout << "Luigi has fainted!\n";
+  } else {
+      std::cout << "You defeated the ghost!\n";
+      mansion[currentRoomIndex].removeGhost();
+  }
 }
 
 void Game::searchRoom() {
@@ -97,4 +106,13 @@ void Game::chooseRoom() {
     } else {
         std::cout << "Invalid room choice!\n";
     }
+}
+
+bool Game::allGhostsDefeated() const {
+  for (const Room& room : mansion) {
+    if (room.hasGhost()) {
+      return false;
+    }
+  }
+  return true;
 }

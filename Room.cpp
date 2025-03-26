@@ -3,6 +3,7 @@
 //
 
 #include "Room.h"
+#include <memory>
 
 Room::Room(const std::string& name, Ghost* ghost, bool hasKey)
     : name(name), ghost(ghost), hasKey(hasKey) {}

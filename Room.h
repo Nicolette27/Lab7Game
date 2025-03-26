@@ -4,6 +4,7 @@
 #ifndef ROOM_H
 #define ROOM_H
 
+#include <memory>
 #include <string>
 #include "Ghost.h"
 
