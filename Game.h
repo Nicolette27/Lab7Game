@@ -15,9 +15,10 @@ private:
     std::vector<Room> mansion;
     int currentRoomIndex;
     Player player;
+    bool debugMode;
 
 public:
-    Game();
+    Game(bool debug);
     void play();
     void playTurn();
     void fightGhost();

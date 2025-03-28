@@ -10,10 +10,14 @@
 
 using namespace std;
 
-Game::Game() : player("Luigi"), currentRoomIndex(0)  {
+Game::Game(bool debug) : player("Luigi"), currentRoomIndex(0), debugMode(debug)  {
     mansion.emplace_back("Entrance", nullptr, false);
     mansion.emplace_back("Library", new Ghost("Purple Puncher", 30), true);
     mansion.emplace_back("Ballroom", new Ghost("Sneaky Spook", 40), false);
+
+	if (debugMode) {
+       std::cout << "[DEBUG] Game initialized with debug mode ON.\n";
+	}
 }
 
 void Game::play() {
@@ -28,6 +32,14 @@ void Game::play() {
 void Game::playTurn() {
     std::cout << "\nYou are in the " << mansion[currentRoomIndex].getName() << ".\n";
 
+    if (debugMode) {
+      std::cout << "[DEBUG] Current Room: " << mansion[currentRoomIndex].getName() << "\n";
+        std::cout << "[DEBUG] Player Health: " << player.getHealth() << "\n";
+        if (mansion[currentRoomIndex].hasGhost()) {
+            std::cout << "[DEBUG] Ghost Here: " << mansion[currentRoomIndex].getGhost()->getName()
+                      << " (Health: " << mansion[currentRoomIndex].getGhost()->getHealth() << ")\n";
+        }
+    }
     if (allGhostsDefeated()) {
        std::cout << "Congratulations! You have defeated all the ghosts!\n";
        exit(0);
@@ -58,10 +70,22 @@ void Game::fightGhost() {
     std::cout << "There's no ghost here!\n";
     return;
   }
+
+  if (debugMode) {
+    std::cout << "[DEBUG] Fighting ghost: " << ghost.getName()
+                  << " (Health: " << ghost.getHealth() << ")\n";
+  }
   while (ghost.getHealth() > 0 && player.getHealth() > 0) {
       player.attackGhost(ghost);
+      if (debugMode) {
+        std::cout << "[DEBUG] Ghost Health After Attack: " << ghost.getHealth() << "\n";
+
+      }
       if (ghost.getHealth() > 0) {
           player.takeDamage(10);
+          if (debugMode) {
+            std::cout << "[DEBUG] Player Health After Taking Damage: " << player.getHealth() << "\n";
+          }
       }
   }
 
