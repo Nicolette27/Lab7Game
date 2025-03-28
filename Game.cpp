@@ -18,6 +18,7 @@ Game::Game() : player("Luigi"), currentRoomIndex(0)  {
 
 void Game::play() {
     std::cout << "Welcome to Luigi’s Mansion!\n";
+    std::cout << "The goal? Defeat all the ghosts!\n";
     while (player.getHealth() > 0) {
         playTurn();
     }
